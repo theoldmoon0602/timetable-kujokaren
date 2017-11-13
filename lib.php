@@ -136,6 +136,16 @@ class Request {
 		];
 	}
 
+	public function image($url, $thumburl) {
+	    return [
+		[
+		    'type' => 'image',
+		    'originalContentUrl' => $url,
+		    'previewImageUrl' => $thumburl,
+		]
+	    ];
+	}
+
 	public function push($to, $obj) {
 		$json = [
 				'to' => $to,
@@ -286,4 +296,19 @@ function genSecureToken() {
 
 function checkSecureToken($tok) {
 	return trim(file_get_contents(CONSTANTS::SECURETOKEN)) === trim($tok);
+}
+
+function parseMes($mes) {
+    $pat = "/@\w+\.(jpg|png|gif)/";
+    preg_match_all($pat, $mes, $imgs);
+    $newmes = preg_replace($pat, "", $mes);
+
+    return [
+	'mes' => $newmes,
+	'imgs' => $imgs[0],
+    ];
+}
+
+function makeImageUrl($image) {
+    return "https://theoldmoon0602.tk/kujokaren/img.php?file=$image";
 }
